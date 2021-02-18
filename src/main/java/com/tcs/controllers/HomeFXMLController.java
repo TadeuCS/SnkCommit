@@ -13,9 +13,8 @@ import com.tcs.util.SessionUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -59,10 +58,10 @@ public class HomeFXMLController implements Initializable {
 
     private boolean runThread;
 
-    private List<Branch> branchs;
-    private List<Commit> commits;
-    private List<String> listImplementations;
-    private List<String> listFiles;
+    private LinkedHashSet<Branch> branchs;
+    private LinkedHashSet<Commit> commits;
+    private LinkedHashSet<String> listImplementations;
+    private LinkedHashSet<String> listFiles;
 
     /**
      * Initializes the controller class.
@@ -105,6 +104,7 @@ public class HomeFXMLController implements Initializable {
     }
 
     private void search() {
+        initVariables();
         if (searchCommitThread == null) {
             createThread();
             runThread = true;
@@ -126,7 +126,7 @@ public class HomeFXMLController implements Initializable {
                         StringBuilder textLog = new StringBuilder();
                         System.out.println("Verificando Commits...");
                         updateMessage("Verificando Commits...");
-                        Project project = buildCommits(SessionUtils.git, branchs, commits);
+                        Project project = buildCommits(SessionUtils.git);
                         if (commits.isEmpty()) {
                             Platform.runLater(() -> {
                                 MessageUtils.alertDialog("Nenhum commit encontrado!");
@@ -135,7 +135,7 @@ public class HomeFXMLController implements Initializable {
                             });
                         } else {
                             processCommits(project);
-                            buildLog(textLog, listImplementations, branchs, listFiles);
+                            buildLog(textLog);
                             Platform.runLater(() -> {
                                 threadSuspend(textLog.toString());
                             });
@@ -177,8 +177,8 @@ public class HomeFXMLController implements Initializable {
         }
     }
 
-    private Project buildCommits(GitUtils git, List<Branch> branchs, List<Commit> commits) throws Exception {
-        Project project = git.getProject(SessionUtils.parametters.getProjectName());
+    private Project buildCommits(GitUtils git) throws Exception {
+        Project project = SessionUtils.git.getProject(SessionUtils.parametters.getProjectName());
         branchs.addAll(git.listBranchs(project, branchName));
         for (Branch branch : branchs) {
             List<Commit> commitsByBranch = git.listCommits(project, branch.getName(), OUtils.addDays(-Integer.parseInt(days), new Date()), author);
@@ -187,7 +187,7 @@ public class HomeFXMLController implements Initializable {
         return project;
     }
 
-    private void buildLog(StringBuilder textLog, List<String> listImplementations, List<Branch> branchs, List<String> listFiles) {
+    private void buildLog(StringBuilder textLog) {
         textLog.append("### Tipo de Retorno").append("\n");
         textLog.append("Implementação").append("\n\n");
         textLog.append("### Problema/Solução").append("\n");
@@ -259,10 +259,10 @@ public class HomeFXMLController implements Initializable {
     }
 
     private void initVariables() {
-        branchs = new ArrayList<>();
-        commits = new ArrayList<>();
-        listImplementations = new ArrayList<>();
-        listFiles = new ArrayList<>();
+        branchs = new LinkedHashSet<>();
+        commits = new LinkedHashSet<>();
+        listImplementations = new LinkedHashSet<>();
+        listFiles = new LinkedHashSet<>();
     }
 
 }

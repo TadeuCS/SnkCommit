@@ -14,7 +14,7 @@ import org.ini4j.Ini;
  * @author Tadeu-PC
  */
 public class SessionUtils {
-    public static final String version = "1.0.2";
+    public static final String version = "1.0.3";
     public static Stage stage;
     public static ParamettersPojo parametters;
     public static Ini ini;
