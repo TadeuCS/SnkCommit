@@ -46,7 +46,7 @@ public class LoginFXMLController implements Initializable {
     private void signIn(ActionEvent event) {
         try {
             putParammetersInSession();
-            SessionUtils.getInstance().gitUtils.auth();
+            SessionUtils.getInstance().versionController.auth();
             SessionUtils.getInstance().screenUtils.toHomePage();
         } catch (Exception e) {
             e.printStackTrace();

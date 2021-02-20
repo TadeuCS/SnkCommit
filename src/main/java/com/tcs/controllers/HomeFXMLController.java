@@ -95,19 +95,19 @@ public class HomeFXMLController implements Initializable {
                     try {
                         System.out.println("Verificando Commits...");
                         updateMessage("Verificando Commits...");
-                        SessionUtils.getInstance().gitUtils.init();
-                        SessionUtils.getInstance().gitUtils.listBranchs(SessionUtils.getInstance().parameters.getProjectName(), iptBranch.getText().trim());
-                        for (BranchPojo branch : SessionUtils.getInstance().gitUtils.getBranchs()) {
-                            SessionUtils.getInstance().gitUtils.listCommits(branch, OUtils.addDays(-Integer.parseInt(iptDays.getText().trim())), iptAuthor.getText().trim());
+                        SessionUtils.getInstance().versionController.init();
+                        SessionUtils.getInstance().versionController.listBranchs(SessionUtils.getInstance().parameters.getProjectName(), iptBranch.getText().trim());
+                        for (BranchPojo branch : SessionUtils.getInstance().versionController.getBranchs()) {
+                            SessionUtils.getInstance().versionController.listCommits(branch, OUtils.addDays(-Integer.parseInt(iptDays.getText().trim())), iptAuthor.getText().trim());
                         }
-                        if (SessionUtils.getInstance().gitUtils.getCommits().isEmpty()) {
+                        if (SessionUtils.getInstance().versionController.getCommits().isEmpty()) {
                             Platform.runLater(() -> {
                                 MessageUtils.alertDialog("Nenhum commit encontrado!");
                                 threadSuspend("");
                                 iptDays.requestFocus();
                             });
                         } else {
-                            String log = SessionUtils.getInstance().gitUtils.buildLog();
+                            String log = SessionUtils.getInstance().versionController.buildLog();
                             Platform.runLater(() -> {
                                 threadSuspend(log);
                             });

@@ -7,6 +7,7 @@ package com.tcs.util;
 
 import com.tcs.services.GitLab;
 import com.tcs.pojo.ParametterPojo;
+import com.tcs.services.VersionControllerAbstract;
 import java.io.File;
 import org.ini4j.Ini;
 
@@ -19,7 +20,7 @@ public final class SessionUtils {
     public static final String APP_VERSION = "1.0.5";
     public static final String APP_NAME = "Easy Commit";
     public ParametterPojo parameters;
-    public final GitLab gitUtils;
+    public final VersionControllerAbstract versionController;
     public ScreenUtils screenUtils;
     private final Ini ini;
     
@@ -27,7 +28,7 @@ public final class SessionUtils {
     private static final SessionUtils instance = new SessionUtils();
 
     public SessionUtils() {
-        gitUtils = new GitLab();
+        versionController = new GitLab();
         ini = new Ini();
         try {
             loadParametersByIniFile();

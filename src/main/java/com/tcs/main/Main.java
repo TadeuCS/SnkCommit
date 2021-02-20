@@ -17,7 +17,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         SessionUtils.getInstance().screenUtils = new ScreenUtils(stage);
         try {
-            SessionUtils.getInstance().gitUtils.auth();
+            SessionUtils.getInstance().versionController.auth();
             SessionUtils.getInstance().screenUtils.toHomePage();
         } catch (Exception e) {
             SessionUtils.getInstance().screenUtils.toSignInPage();
