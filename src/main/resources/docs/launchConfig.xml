@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\sk-java\SnkEasyCommit-1.0.3.jar</jar>
+  <jar>C:\sk-java\SnkEasyCommit-1.0.5.jar</jar>
   <outfile>C:\sk-java\EasyCommit.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>

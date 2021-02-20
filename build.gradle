@@ -16,6 +16,8 @@ jar {
     version = "1.0.1" //Criado Tela Principal com parâmetros estáticos
     version = "1.0.2" //Criado parametrização para conexão dinâmica
     version = "1.0.3" //Correção lista de commits aceitava mensagens repetidas e as listas não estavam limpando ao fazer um novo commit
+    version = "1.0.4" //Criado tela de autenticação com GitLab
+    version = "1.0.5" //Refactory para abstração do processamento de dados do GITLAB, e estruturado para se for necessário integrar com outro controlador de versão
     
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest { 

@@ -11,23 +11,22 @@ import org.ini4j.Ini;
  *
  * @author Tadeu-PC
  */
-public class ParamettersPojo {
+public class ParametterPojo {
     private String userName;
     private String password;
     private String url;
     private String projectName;
 
-    public ParamettersPojo() {
+    public ParametterPojo() {
     }
     
-    public ParamettersPojo(Ini ini) {
-        this.url=ini.get("GITLAB", "URL");
-        this.userName=ini.get("GITLAB", "USERNAME");
-        this.password=ini.get("GITLAB", "PASSWORD");
-        this.projectName=ini.get("GITLAB", "PROJECT_NAME");
+    public ParametterPojo(Ini ini) {
     }
     
     public String getUserName() {
+        if(userName==null){
+            userName="";
+        }
         return userName;
     }
 
@@ -36,6 +35,9 @@ public class ParamettersPojo {
     }
 
     public String getPassword() {
+        if(password==null){
+            password="";
+        }
         return password;
     }
 
@@ -44,6 +46,9 @@ public class ParamettersPojo {
     }
 
     public String getUrl() {
+        if(url==null){
+            url="https://git.sankhya.com.br";
+        }
         return url;
     }
 
@@ -52,6 +57,9 @@ public class ParamettersPojo {
     }
 
     public String getProjectName() {
+        if(projectName==null){
+            projectName="Sankhyaw";
+        }
         return projectName;
     }
 

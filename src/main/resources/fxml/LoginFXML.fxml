@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="350.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tcs.controllers.LoginFXMLController">
+   <children>
+      <ImageView fitHeight="89.0" fitWidth="203.0" layoutX="99.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="14.0">
+         <image>
+            <Image url="@../img/gitlab-logo.png" />
+         </image>
+      </ImageView>
+      <VBox layoutX="14.0" layoutY="136.0" prefHeight="136.0" prefWidth="380.0" spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label style="-fx-font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Noto Sans&quot;, Ubuntu, Cantarell, &quot;Helvetica Neue&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;;" text="Username or email" textFill="#303030">
+                     <font>
+                        <Font name="Georgia Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="iptUserName" minHeight="34.0" style="-fx-border-radius: 30;" />
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label style="-fx-font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Noto Sans&quot;, Ubuntu, Cantarell, &quot;Helvetica Neue&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;;" text="Password" textFill="#303030">
+                     <font>
+                        <Font name="Georgia Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="iptPassword" minHeight="34.0" style="-fx-border-radius: 30;" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <Button fx:id="btnSignIn" minHeight="34.0" mnemonicParsing="false" onAction="#signIn" style="-fx-background-color: #217645; -fx-font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Noto Sans&quot;, Ubuntu, Cantarell, &quot;Helvetica Neue&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;;" text="Sign in" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Button>
+      <CheckBox fx:id="chxRememberMe" layoutX="10.0" layoutY="272.0" mnemonicParsing="false" style="-fx-font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Noto Sans&quot;, Ubuntu, Cantarell, &quot;Helvetica Neue&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; -fx-font-size: 13; -fx-font-weight: 500;" text="Remember me" textFill="#303030" />
+   </children>
+</AnchorPane>

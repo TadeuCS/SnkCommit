@@ -15,8 +15,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        SessionUtils.stage = stage;
-        SessionUtils.screenUtils = new ScreenUtils();
-        SessionUtils.screenUtils.toHome();
+        SessionUtils.getInstance().screenUtils = new ScreenUtils(stage);
+        try {
+            SessionUtils.getInstance().gitUtils.auth();
+            SessionUtils.getInstance().screenUtils.toHomePage();
+        } catch (Exception e) {
+            SessionUtils.getInstance().screenUtils.toSignInPage();
+        }
     }
 }

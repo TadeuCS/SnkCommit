@@ -12,30 +12,65 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 /**
  *
  * @author Tadeu-PC
  */
 public class ScreenUtils {
+    
+    private final Stage stage;
 
-    public Screen screen;
-    public Parent root;
-
-    public void toHome() {
+    public ScreenUtils(Stage stage) {
+        this.stage=stage;
+    }
+    
+    public Stage getStage(){
+        return stage;
+    }
+    
+    public void toHomePage() {
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/HomeFXML.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/HomeFXML.fxml"));
             setUserAgentStylesheet(STYLESHEET_MODENA);
-            SessionUtils.stage.setTitle("Sankhya - Easy Commit v" + SessionUtils.version+"");
-            SessionUtils.stage.setResizable(false);
-            SessionUtils.stage.getIcons().add(
+            stage.setTitle("Sankhya - "+SessionUtils.APP_NAME+" v" + SessionUtils.APP_VERSION+"");
+            stage.setResizable(false);
+            stage.getIcons().clear();
+            stage.getIcons().add(
                     new Image("/img/logosankhya-only.png"));
-            SessionUtils.stage.setScene(new Scene(root));
-            SessionUtils.stage.show();
+            stage.setScene(new Scene(root));
+            stage.show();
         } catch (IOException e) {
             MessageUtils.exceptionDialog("Erro ao abrir a Tela Principal!", e);
             e.printStackTrace();
+        }
+    }
+
+    public void toSignInPage() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoginFXML.fxml"));
+            setUserAgentStylesheet(STYLESHEET_MODENA);
+            stage.setTitle("Sign in - GitLab");
+            stage.setResizable(false);
+            stage.getIcons().clear();
+            stage.getIcons().add(
+                    new Image("/img/gitlab-only.png"));
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            MessageUtils.exceptionDialog("Erro ao abrir a Tela de Login!", e);
+            e.printStackTrace();
+        }
+    }
+    
+    public void closeWindow(Scene scene) {
+        try {
+            Stage s = (Stage) scene.getWindow();
+            s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            MessageUtils.exceptionDialog("Erro ao fechar a janela", e);
         }
     }
 }
