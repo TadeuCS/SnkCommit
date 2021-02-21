@@ -12,10 +12,14 @@ import com.tcs.util.SessionUtils;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.WindowEvent;
@@ -38,7 +42,11 @@ public class HomeFXMLController implements Initializable {
 
     private Thread searchCommitThread;
 
-    private boolean runThread;
+    private BooleanProperty runThread;
+    @FXML
+    private Button btnSearch;
+    @FXML
+    private ProgressIndicator progressIndicator;
 
     /**
      * Initializes the controller class.
@@ -46,6 +54,14 @@ public class HomeFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setDefaultPatternToField();
+        runThread=new SimpleBooleanProperty(false);
+        btnSearch.disableProperty().bind(
+                iptBranch.textProperty().isEmpty().or(
+                        iptDays.textProperty().isEmpty()).or(
+                                runThread.not().not()
+                        )
+                );
+        progressIndicator.visibleProperty().bind(runThread);
     }
 
     @FXML
@@ -60,7 +76,7 @@ public class HomeFXMLController implements Initializable {
     }
 
     private void validateParametters() {
-        if (iptBranch.getText().trim().length() < 7) {
+        if (iptBranch.getText().trim().length() < 5) {
             MessageUtils.alertDialog("Informe um número de BRANCH válido!");
             iptBranch.requestFocus();
             return;
@@ -77,11 +93,11 @@ public class HomeFXMLController implements Initializable {
     private void search() {
         if (searchCommitThread == null) {
             createThread();
-            runThread = true;
+            runThread.setValue(Boolean.TRUE);
             System.out.println("Thread Iniciada!");
             searchCommitThread.start();
         } else {
-            runThread = true;
+            runThread.setValue(Boolean.TRUE);
             System.out.println("Thread reiniciada...");
             searchCommitThread.resume();
         }
@@ -91,7 +107,7 @@ public class HomeFXMLController implements Initializable {
         Task task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
-                while (runThread) {
+                while (runThread.getValue()) {
                     try {
                         System.out.println("Verificando Commits...");
                         updateMessage("Verificando Commits...");
@@ -102,9 +118,9 @@ public class HomeFXMLController implements Initializable {
                         }
                         if (SessionUtils.getInstance().versionController.getCommits().isEmpty()) {
                             Platform.runLater(() -> {
-                                MessageUtils.alertDialog("Nenhum commit encontrado!");
                                 threadSuspend("");
                                 iptDays.requestFocus();
+                                MessageUtils.alertDialog("Nenhum commit encontrado!");
                             });
                         } else {
                             String log = SessionUtils.getInstance().versionController.buildLog();
@@ -114,9 +130,9 @@ public class HomeFXMLController implements Initializable {
                         }
                     } catch (Exception e) {
                         Platform.runLater(() -> {
-                            MessageUtils.errorDialog(e.getMessage());
-                            threadSuspend("");
                             e.printStackTrace();
+                            threadSuspend("");
+                            MessageUtils.errorDialog(e.getMessage());
                         });
                     }
                     Thread.sleep(1000);
@@ -125,7 +141,7 @@ public class HomeFXMLController implements Initializable {
             }
 
             private void threadSuspend(String text) {
-                runThread = false;
+                runThread.setValue(Boolean.FALSE);
                 searchCommitThread.suspend();
                 updateMessage(text);
                 System.out.println("Thread Interrompida...");
@@ -134,7 +150,7 @@ public class HomeFXMLController implements Initializable {
         searchCommitThread = new Thread(task);
         searchCommitThread.setName("Thread List-Commits");
         searchCommitThread.setDaemon(true);
-        runThread = true;
+        runThread.setValue(Boolean.TRUE);
         iptLog.textProperty().bind(task.messageProperty());
         onCloseScreen();
     }
@@ -142,10 +158,10 @@ public class HomeFXMLController implements Initializable {
     private void onCloseScreen() {
         SessionUtils.getInstance().screenUtils.getStage().
                 setOnCloseRequest((WindowEvent event) -> {
-                    runThread = false;
+                    runThread.setValue(Boolean.FALSE);
                     searchCommitThread.interrupt();
                     System.gc();
                 });
     }
-    
+
 }

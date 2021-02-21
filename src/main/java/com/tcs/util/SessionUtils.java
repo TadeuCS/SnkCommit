@@ -19,13 +19,13 @@ public final class SessionUtils {
 
     public static final String APP_VERSION = "1.0.5";
     public static final String APP_NAME = "Easy Commit";
-    public ParametterPojo parameters;
     public final VersionControllerAbstract versionController;
+    public ParametterPojo parameters;
     public ScreenUtils screenUtils;
     private final Ini ini;
     
 
-    private static final SessionUtils instance = new SessionUtils();
+    private static final SessionUtils INSTANCE = new SessionUtils();
 
     public SessionUtils() {
         versionController = new GitLab();
@@ -38,7 +38,7 @@ public final class SessionUtils {
     }
 
     public static SessionUtils getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     public void loadParametersByIniFile() throws Exception {

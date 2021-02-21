@@ -20,14 +20,17 @@ import java.util.stream.Collectors;
 public abstract class VersionControllerAbstract {
 
     protected List<BranchPojo> branchs;
-    protected List<CommitPojo> commits;
 
     public List<BranchPojo> getBranchs() {
         return branchs;
     }
 
     public List<CommitPojo> getCommits() {
-        return commits;
+        List<CommitPojo> commitsPojo = new ArrayList<>();
+        for (List<CommitPojo> commits : branchs.stream().map(b -> b.getCommits()).collect(Collectors.toList())) {
+            commitsPojo.addAll(commits);
+        }
+        return commitsPojo;
     }
 
     public VersionControllerAbstract() {
@@ -35,52 +38,59 @@ public abstract class VersionControllerAbstract {
 
     public void init() {
         branchs = new ArrayList<>();
-        commits = new ArrayList<>();
     }
 
     public String buildLog() {
         StringBuilder textLog = new StringBuilder();
-        textLog.append("### Tipo de Retorno").append("\n");
-        textLog.append("Implementação").append("\n\n");
-        textLog.append("### Problema/Solução").append("\n");
+        LinkedHashSet<String> branchsNames = new LinkedHashSet<>();
         LinkedHashSet<String> commitMesages = new LinkedHashSet<>();
         LinkedHashSet<String> changedFiles = new LinkedHashSet<>();
         for (BranchPojo branch : branchs) {
             String textStart = "OS: " + getBranchNumber(branch.getName());
             for (CommitPojo commit : branch.getCommits()
                     .stream()
-                    .filter(c -> c.getMessage().startsWith(textStart))
+                    .filter(c -> (branch.getName().length()!=3 && branch.getName().length()!=6) ? c.getMessage().startsWith(textStart) : true)
                     .collect(Collectors.toList())) {
-                commitMesages.add(commit.getMessage().replace(textStart, ""));
+                branchsNames.add(branch.getName());
+                commitMesages.add(commit.getMessage().replace(textStart, "").replace("\n\n", "\n").trim());
                 for (String changedFile : commit.getChangedFiles()) {
-                    changedFiles.add(changedFile);
+                    changedFiles.add(changedFile.trim());
                 }
             }
         }
 
-        for (String commitMessage : commitMesages) {
-            textLog.append(commitMessage);
+        if (!branchsNames.isEmpty()) {
+            textLog.append("### Tipo de Retorno").append("\n");
+            textLog.append("Implementação").append("\n\n");
+            textLog.append("### Problema/Solução").append("\n");
+            for (String commitMessage : commitMesages) {
+                textLog.append(commitMessage);
+            }
+            textLog.append("\n\n");
+            for (String branchName : branchsNames) {
+                textLog.append("### Implementado na BRANCH: [").append(branchName).append("]\n");
+            }
+            textLog.append("\n");
+            textLog.append("### Fontes Alterados\n");
+            for (String filePath : changedFiles) {
+                textLog.append(filePath).append("\n");
+            }
         }
-        textLog.append("\n");
-        for (BranchPojo branch : branchs) {
-            textLog.append("### Implementado na BRANCH: [").append(branch.getName()).append("]\n");
-        }
-        textLog.append("\n");
-        textLog.append("### Fontes Alterados\n");
-        for (String filePath : changedFiles) {
-            textLog.append(filePath).append("\n");
-        }
+
         return textLog.toString();
     }
 
     private String getBranchNumber(String branchName) {
         return branchName.contains("-") ? branchName.substring(0, branchName.indexOf("-")) : branchName;
     }
-    
-    
+
     public abstract void auth() throws Exception;
+
     public abstract Object getProject(String projectName) throws Exception;
+
     public abstract List listBranchs(String projectName, String branchName) throws Exception;
+
     public abstract List listCommits(BranchPojo branch, Date dtIniCommits, String author) throws Exception;
+
     public abstract List listDiffs(BranchPojo branch, CommitPojo commit) throws Exception;
 }

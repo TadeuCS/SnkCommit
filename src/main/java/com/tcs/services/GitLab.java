@@ -8,6 +8,7 @@ package com.tcs.services;
 import com.tcs.pojo.BranchPojo;
 import com.tcs.pojo.CommitPojo;
 import com.tcs.pojo.ParametterPojo;
+import com.tcs.util.OUtils;
 import com.tcs.util.SessionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +53,8 @@ public class GitLab extends VersionControllerAbstract {
         List<Branch> branchsGitLab = new ArrayList<>();
         Project project = (Project) getProject(projectName);
         try {
-            if (branchName.contains("-")) {
+            System.out.println("Branch: "+branchName);
+            if (branchName.contains("-") || branchName.length()==3 || branchName.length()==6) {
                 branchsGitLab = Arrays.asList(gitLabApi.getRepositoryApi().getBranch(project.getId(), branchName));
             } else {
                 branchsGitLab = gitLabApi.getRepositoryApi().getBranches(project.getId(), branchName);
@@ -69,11 +71,15 @@ public class GitLab extends VersionControllerAbstract {
     public List listCommits(BranchPojo branch, Date dtIniCommits, String author) throws Exception {
         List<Commit> commitsGitLab = new ArrayList<>();
         try {
-            commitsGitLab = gitLabApi.getCommitsApi().getCommits(branch.getProjectId(), branch.getName(), dtIniCommits, new Date());
+            Date since = OUtils.getStartOfDay(dtIniCommits);
+            Date until = new Date();
+            System.out.println("Período: "+since+" até "+until);
+            commitsGitLab = gitLabApi.getCommitsApi().getCommits(branch.getProjectId(), branch.getName(), since, until);
         } catch (Exception e) {
             throw new Exception("Erro ao listar os COMMITs do GIT.\n");
         } finally {
             if (author != null && !author.trim().isEmpty()) {
+                System.out.println("Autor: "+ author);
                 commitsGitLab = commitsGitLab.stream().filter(c -> c.getAuthorName().equals(author)).collect(Collectors.toList());
             }
             for (Commit commitGitLab : commitsGitLab) {
@@ -81,7 +87,6 @@ public class GitLab extends VersionControllerAbstract {
                 listDiffs(branch, commit);
                 branch.getCommits().add(commit);
             }
-            this.commits.addAll(branch.getCommits());
         }
         return commitsGitLab;
     }
