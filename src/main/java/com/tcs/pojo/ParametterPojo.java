@@ -69,7 +69,7 @@ public class ParametterPojo {
 
     @Override
     public String toString() {
-        return "ParamettersPojo{" + "userName=" + userName + ", password=" + password + ", url=" + url + '}';
+        return "ParamettersPojo{" + "userName=" + getUserName() + ", password=" + getPassword() + ", url=" + getUrl() + '}';
     }
     
 }

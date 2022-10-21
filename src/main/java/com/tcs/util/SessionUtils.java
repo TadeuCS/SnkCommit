@@ -6,8 +6,8 @@
 package com.tcs.util;
 
 import com.tcs.services.GitLab;
+import com.tcs.services.IVersionControler;
 import com.tcs.pojo.ParametterPojo;
-import com.tcs.services.VersionControllerAbstract;
 import java.io.File;
 import org.ini4j.Ini;
 
@@ -17,9 +17,9 @@ import org.ini4j.Ini;
  */
 public final class SessionUtils {
 
-    public static final String APP_VERSION = "1.0.5";
+    public static final String APP_VERSION = "1.0.6";
     public static final String APP_NAME = "Easy Commit";
-    public final VersionControllerAbstract versionController;
+    public final IVersionControler versionController;
     public ParametterPojo parameters;
     public ScreenUtils screenUtils;
     private final Ini ini;

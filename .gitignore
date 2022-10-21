@@ -2,3 +2,6 @@
 .nb-gradle/
 build/
 *.ini
+*.settings
+*.classpath
+*.project

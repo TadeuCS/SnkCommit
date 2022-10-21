@@ -15,10 +15,10 @@ import java.util.Objects;
  */
 public class BranchPojo {
     private String name;
-    private Integer projectId;
+    private Long projectId;
     private List<CommitPojo> commits;
 
-    public BranchPojo(String name, Integer projectId) {
+    public BranchPojo(String name, Long projectId) {
         this.name = name;
         this.projectId=projectId;
         this.commits=new ArrayList<>();
@@ -32,11 +32,11 @@ public class BranchPojo {
         this.name = name;
     }
 
-    public Integer getProjectId() {
+    public Long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Integer projectId) {
+    public void setProjectId(Long projectId) {
         this.projectId = projectId;
     }
 

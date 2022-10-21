@@ -6,11 +6,16 @@
 package com.tcs.controllers;
 
 import com.tcs.pojo.BranchPojo;
+import com.tcs.pojo.CommitPojo;
 import com.tcs.util.MessageUtils;
 import com.tcs.util.OUtils;
 import com.tcs.util.SessionUtils;
 import java.net.URL;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -71,8 +76,6 @@ public class HomeFXMLController implements Initializable {
 
     private void setDefaultPatternToField() {
         OUtils.onlyDigitsValue(iptDays, 2);
-        OUtils.fieldToLOWER(iptBranch);
-        OUtils.fieldToLOWER(iptAuthor);
     }
 
     private void validateParametters() {
@@ -104,28 +107,27 @@ public class HomeFXMLController implements Initializable {
     }
 
     private void createThread() {
-        Task task = new Task<Void>() {
+    	Task<Void> task = new Task<Void>() {
             @Override
             public Void call() throws Exception {
                 while (runThread.getValue()) {
                     try {
                         System.out.println("Verificando Commits...");
                         updateMessage("Verificando Commits...");
-                        SessionUtils.getInstance().versionController.init();
-                        SessionUtils.getInstance().versionController.listBranchs(SessionUtils.getInstance().parameters.getProjectName(), iptBranch.getText().trim());
-                        for (BranchPojo branch : SessionUtils.getInstance().versionController.getBranchs()) {
-                            SessionUtils.getInstance().versionController.listCommits(branch, OUtils.addDays(-Integer.parseInt(iptDays.getText().trim())), iptAuthor.getText().trim());
+                        List<BranchPojo> listBranchs = SessionUtils.getInstance().versionController.listBranchs(SessionUtils.getInstance().parameters.getProjectName(), iptBranch.getText().trim());
+                        for (BranchPojo branch : listBranchs) {
+                            List<CommitPojo> listCommits = SessionUtils.getInstance().versionController.listCommits(branch, Integer.parseInt(iptDays.getText().trim()), iptAuthor.getText().trim());
+                            branch.setCommits(listCommits);
                         }
-                        if (SessionUtils.getInstance().versionController.getCommits().isEmpty()) {
+                        if (listBranchs.stream().map(BranchPojo::getCommits).collect(Collectors.toList()).isEmpty()) {
                             Platform.runLater(() -> {
                                 threadSuspend("");
                                 iptDays.requestFocus();
                                 MessageUtils.alertDialog("Nenhum commit encontrado!");
                             });
                         } else {
-                            String log = SessionUtils.getInstance().versionController.buildLog();
                             Platform.runLater(() -> {
-                                threadSuspend(log);
+                                threadSuspend(buildLog(listBranchs));
                             });
                         }
                     } catch (Exception e) {
@@ -162,6 +164,48 @@ public class HomeFXMLController implements Initializable {
                     searchCommitThread.interrupt();
                     System.gc();
                 });
+    }
+    
+    private String buildLog(List<BranchPojo> branchs) {
+        StringBuilder textLog = new StringBuilder();
+        LinkedHashSet<String> branchsNames = new LinkedHashSet<>();
+        LinkedHashSet<String> commitMesages = new LinkedHashSet<>();
+        LinkedHashSet<String> changedFiles = new LinkedHashSet<>();
+        for (BranchPojo branch : branchs) {
+            String textStart = "OS: " + getBranchNumber(branch.getName());
+            for (CommitPojo commit : branch.getCommits()
+                    .stream()
+                    .filter(c -> (branch.getName().length()!=3 && branch.getName().length()!=6) ? c.getMessage().startsWith(textStart) : true)
+                    .collect(Collectors.toList())) {
+                branchsNames.add(branch.getName());
+                commitMesages.add(commit.getMessage().replace(textStart, "").trim());
+                for (String changedFile : commit.getChangedFiles()) {
+                    changedFiles.add(changedFile.trim());
+                }
+            }
+        }
+
+        if (!branchsNames.isEmpty()) {
+            textLog.append("### Tipo de Retorno").append("\n");
+            textLog.append("Implementação").append("\n\n");
+            textLog.append("### Problema/Solução").append("\n");
+            String msg = commitMesages.stream().collect(Collectors.joining("\n"));
+            textLog.append(msg);
+            textLog.append("\n\n");
+            for (String branchName : branchsNames) {
+                textLog.append("### Implementado na BRANCH: [").append(branchName).append("]\n");
+            }
+            textLog.append("\n\n");
+            textLog.append("### Fontes Alterados\n");
+            String filePath = changedFiles.stream().sorted().collect(Collectors.joining("\n"));
+            textLog.append(filePath);
+        }
+
+        return textLog.toString();
+    }
+
+    private String getBranchNumber(String branchName) {
+        return branchName.contains("-") ? branchName.substring(0, branchName.indexOf("-")) : branchName;
     }
 
 }

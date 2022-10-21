@@ -5,40 +5,67 @@
  */
 package com.tcs.services;
 
+import java.util.List;
+
 import com.tcs.pojo.BranchPojo;
 import com.tcs.pojo.CommitPojo;
-import java.util.Date;
-import java.util.List;
+import com.tcs.pojo.ParametterPojo;
 
 /**
  *
  * @author Tadeu-PC
  */
-public class SVN extends VersionControllerAbstract{
+public class SVN implements IVersionControler{
 
-    @Override
-    public void auth() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public void auth() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public Object getProject(String projectName) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public void auth(ParametterPojo params) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public List listBranchs(String projectName, String branchName) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public Object getProjectID(String projectName) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public List listCommits(BranchPojo branch, Date dtIniCommits, String author) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public List<BranchPojo> listBranchs(String projectName, String branchName) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public List listDiffs(BranchPojo branch, CommitPojo commit) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	public List<CommitPojo> listCommits(BranchPojo branch, int days, String author) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<CommitPojo> listCommits(Long projectID, String branchName, int dtIniCommits, String author)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> listDiffs(BranchPojo branch, CommitPojo commit) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> listDiffs(Long projectID, String commitHash) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
     
+
 }

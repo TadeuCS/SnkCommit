@@ -18,6 +18,7 @@ jar {
     version = "1.0.3" //Correção lista de commits aceitava mensagens repetidas e as listas não estavam limpando ao fazer um novo commit
     version = "1.0.4" //Criado tela de autenticação com GitLab
     version = "1.0.5" //Refactory para abstração do processamento de dados do GITLAB, e estruturado para se for necessário integrar com outro controlador de versão
+    version = "1.0.6" //Ajuste feito para carregar somente do projeto SANKHYAW, melhoria de estrutura e log de retorno, criado testes unitários.
     
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest { 
@@ -37,6 +38,9 @@ jar {
 }
 
 dependencies {
-    compile group: 'org.gitlab4j', name: 'gitlab4j-api', version: '4.15.7'
-    compile group: 'org.ini4j', name: 'ini4j', version: '0.5.4'
+    // https://mvnrepository.com/artifact/org.gitlab4j/gitlab4j-api
+	compile group: 'org.gitlab4j', name: 'gitlab4j-api', version: '5.0.1'
+
+    // https://mvnrepository.com/artifact/org.ini4j/ini4j
+	compile group: 'org.ini4j', name: 'ini4j', version: '0.5.4'
 }
